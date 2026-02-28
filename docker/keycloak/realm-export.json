@@ -1,0 +1,60 @@
+{
+  "realm": "univerliga",
+  "enabled": true,
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "roles": {
+    "realm": [
+      { "name": "ROLE_ADMIN" },
+      { "name": "ROLE_MANAGER" },
+      { "name": "ROLE_HR" },
+      { "name": "ROLE_EMPLOYEE" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "univerliga-crm",
+      "name": "univerliga-crm",
+      "enabled": true,
+      "publicClient": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "protocol": "openid-connect",
+      "secret": "univerliga-crm-secret",
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "admin", "temporary": false}],
+      "realmRoles": ["ROLE_ADMIN"],
+      "attributes": {"personId": ["p_admin"], "departmentId": ["d_1"], "teamId": ["t_1"]}
+    },
+    {
+      "username": "manager",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "manager", "temporary": false}],
+      "realmRoles": ["ROLE_MANAGER"],
+      "attributes": {"personId": ["p_manager"], "departmentId": ["d_1"], "teamId": ["t_1"]}
+    },
+    {
+      "username": "hr",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "hr", "temporary": false}],
+      "realmRoles": ["ROLE_HR"],
+      "attributes": {"personId": ["p_hr"], "departmentId": ["d_1"], "teamId": ["t_1"]}
+    },
+    {
+      "username": "employee",
+      "enabled": true,
+      "credentials": [{"type": "password", "value": "employee", "temporary": false}],
+      "realmRoles": ["ROLE_EMPLOYEE"],
+      "attributes": {"personId": ["p_employee"], "departmentId": ["d_1"], "teamId": ["t_1"]}
+    }
+  ]
+}

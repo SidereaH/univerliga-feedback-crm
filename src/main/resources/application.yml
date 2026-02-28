@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: univerliga-crm-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/univerliga_crm}
+    username: ${DB_USERNAME:crm}
+    password: ${DB_PASSWORD:crm}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8081/realms/univerliga/protocol/openid-connect/certs}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+server:
+  port: 8080
+
+app:
+  api-version: v1
+  service-version: 0.1.0
+  outbox:
+    exchange: univerliga.crm.events
+    max-attempts: 10
+    batch-size: 50
+    scheduler-delay-ms: 3000
+    base-backoff-seconds: 2
+
+logging:
+  pattern:
+    level: "%5p [reqId:%X{requestId}]"
