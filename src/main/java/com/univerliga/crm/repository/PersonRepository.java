@@ -14,13 +14,14 @@ public interface PersonRepository extends JpaRepository<PersonEntity, String> {
 
     @Query("""
             select p from PersonEntity p
-            where (:query is null or lower(p.displayName) like lower(concat('%', :query, '%')) or lower(p.email) like lower(concat('%', :query, '%')))
+            where (:hasQuery = false or lower(p.displayName) like :queryPattern or lower(p.email) like :queryPattern)
               and (:departmentId is null or p.departmentId = :departmentId)
               and (:teamId is null or p.teamId = :teamId)
               and (:active is null or p.active = :active)
             """)
     Page<PersonEntity> search(
-            @Param("query") String query,
+            @Param("hasQuery") boolean hasQuery,
+            @Param("queryPattern") String queryPattern,
             @Param("departmentId") String departmentId,
             @Param("teamId") String teamId,
             @Param("active") Boolean active,

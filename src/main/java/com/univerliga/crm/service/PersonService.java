@@ -28,7 +28,10 @@ public class PersonService {
 
     @Transactional(readOnly = true)
     public Page<PersonEntity> search(String query, String departmentId, String teamId, Boolean active, Pageable pageable) {
-        return personRepository.search(query, departmentId, teamId, active, pageable);
+        String normalized = query == null ? null : query.trim().toLowerCase(Locale.ROOT);
+        boolean hasQuery = normalized != null && !normalized.isBlank();
+        String queryPattern = hasQuery ? "%" + normalized + "%" : "%";
+        return personRepository.search(hasQuery, queryPattern, departmentId, teamId, active, pageable);
     }
 
     @Transactional(readOnly = true)

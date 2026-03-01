@@ -37,16 +37,22 @@ public class TaskService {
                                    LocalDate periodTo,
                                    Pageable pageable,
                                    CurrentUser user) {
+        Page<TaskEntity> result;
         if (user.isEmployeeOnly()) {
-            return taskRepository.searchForEmployee(user.personId(), pageable);
+            result = taskRepository.searchForEmployee(user.personId(), pageable);
+        } else {
+            result = taskRepository.search(status, ownerId, assigneeId, participantId, periodFrom, periodTo, pageable);
         }
-        return taskRepository.search(status, ownerId, assigneeId, participantId, periodFrom, periodTo, pageable);
+        result.forEach(this::initializeParticipants);
+        return result;
     }
 
     @Transactional(readOnly = true)
     public TaskEntity getById(String taskId) {
-        return taskRepository.findById(taskId)
+        TaskEntity task = taskRepository.findById(taskId)
                 .orElseThrow(() -> ApiExceptionFactory.notFound("Task not found: " + taskId));
+        initializeParticipants(task);
+        return task;
     }
 
     @Transactional(readOnly = true)
@@ -165,5 +171,9 @@ public class TaskService {
         payload.put("participantIds", task.getParticipantIds());
         payload.put("updatedAt", task.getUpdatedAt() == null ? OffsetDateTime.now().toString() : task.getUpdatedAt().toString());
         return payload;
+    }
+
+    private void initializeParticipants(TaskEntity task) {
+        task.getParticipantIds().size();
     }
 }
